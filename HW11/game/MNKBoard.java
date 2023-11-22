@@ -43,35 +43,37 @@ public class MNKBoard implements Board, Position {
 
         cells[move.getRow()][move.getColumn()] = move.getValue();
 
-        int inDiag1 = 0;
-        int inDiag2 = 0;
         int empty = 0;
         for (int u = 0; u < m; u++) {
-            int inRow = 0;
-            int inColumn = 0;
             for (int v = 0; v < n; v++) {
-                if (cells[u][v] == turn) {
-                    inRow++;
+                int inRow = 0;
+                int inColumn = 0;
+                int inDiag1 = 0;
+                int inDiag2 = 0;
+                for (int w = 0; w < k; w++) {
+                    if (v + w < n && cells[u][v + w] == turn) {
+                        inRow++;
+                    }
+                    if (u + w < m && cells[u + w][v] == turn) {
+                        inColumn++;
+                    }
+                    if (u + w < m && v + w < n && cells[u + w][v + w] == turn) {
+                        inDiag1++;
+                    }
+                    if (u + w < m && v - w > 0 && cells[u + w][v - w] == turn) {
+                        inDiag2++;
+                    }
                 }
-                if (cells[v][u] == turn) {
-                    inColumn++;
+                if (inRow == k || inColumn == k) {
+                    return Result.WIN;
+                }
+                if (inDiag1 == k || inDiag2 == k) {
+                    return Result.WIN;
                 }
                 if (cells[u][v] == Cell.E) {
                     empty++;
                 }
             }
-            if (inRow == k || inColumn == k) {
-                return Result.WIN;
-            }
-            if (cells[u][u] == turn) {
-                inDiag1++;
-            }
-            if (cells[u][(n - 1) - u] == turn) {
-                inDiag2++;
-            }
-        }
-        if (inDiag1 == k || inDiag2 == k) {
-            return Result.WIN;
         }
         if (empty == 0) {
             return Result.DRAW;
