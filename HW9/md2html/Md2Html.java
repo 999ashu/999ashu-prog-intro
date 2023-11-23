@@ -37,7 +37,7 @@ public class Md2Html {
         }
     }
 
-    static final Map<String, String> tags = new HashMap<>(Map.of(
+     private static final Map<String, String> tags = new HashMap<>(Map.of(
             "*", "em",
             "_", "em",
             "**", "strong",
@@ -45,7 +45,7 @@ public class Md2Html {
             "--", "s",
             "`", "code",
             "''", "q"));
-    static final Map<Character, String> escaped = new HashMap<>(Map.of(
+    private static final Map<Character, String> escaped = new HashMap<>(Map.of(
             '&', "&amp;",
             '<', "&lt;",
             '>', "&gt;"));
