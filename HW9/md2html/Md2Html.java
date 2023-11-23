@@ -6,9 +6,8 @@ import java.util.*;
 
 public class Md2Html {
     public static void main(String[] args) {
-        ArrayList<String> rawData = new ArrayList<>();
+        List<String> rawData = new ArrayList<>();
         try (Scanner in = new Scanner(new InputStreamReader(new FileInputStream(args[0]), StandardCharsets.UTF_8))) {
-
             while (in.hasNextLine()) {
                 StringBuilder block = new StringBuilder();
                 String str = in.nextLine();
@@ -26,7 +25,7 @@ public class Md2Html {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Input exception: " + e);
+            System.out.println("Input exception: " + e.getMessage());
             return;
         }
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[1]), StandardCharsets.UTF_8))) {
@@ -39,13 +38,17 @@ public class Md2Html {
     }
 
     static final Map<String, String> tags = new HashMap<>(Map.of(
-            "*", "em>",
-            "_", "em>",
-            "**", "strong>",
-            "__", "strong>",
-            "--", "s>",
-            "`", "code>",
-            "''", "q>"));
+            "*", "em",
+            "_", "em",
+            "**", "strong",
+            "__", "strong",
+            "--", "s",
+            "`", "code",
+            "''", "q"));
+    static final Map<Character, String> escaped = new HashMap<>(Map.of(
+            '&', "&amp;",
+            '<', "&lt;",
+            '>', "&gt;"));
 
     public static int getHeaderLevel(StringBuilder block) {
         int i = 0;
@@ -80,19 +83,11 @@ public class Md2Html {
         while (i < block.length()) {
             if (block.charAt(i) == '<' || block.charAt(i) == '>' || block.charAt(i) == '&' || block.charAt(i) == '\\') {
                 sb.append(block.substring(0, i));
-                switch (block.charAt(i)) {
-                    case '<':
-                        sb.append("&lt;");
-                        break;
-                    case '>':
-                        sb.append("&gt;");
-                        break;
-                    case '&':
-                        sb.append("&amp;");
-                        break;
-                    case '\\':
-                        sb.append(block.charAt(i + 1));
-                        i++;
+                if (block.charAt(i) == '\\') {
+                    sb.append(block.charAt(i + 1));
+                    i++;
+                } else {
+                    sb.append(escaped.get(block.charAt(i)));
                 }
                 sb.append(replaceFormatting(new StringBuilder(block.substring(i + 1))));
                 return sb;
@@ -101,26 +96,18 @@ public class Md2Html {
                 i++;
             } else {
                 if (i + 1 < block.length() && block.charAt(i) == block.charAt(i + 1)) {
-                    int formattingSize = closeFormatting(new StringBuilder(block.substring(i + 2)), ("" + block.charAt(i) + block.charAt(i + 1)));
+                    int formattingSize = closeFormatting(new StringBuilder(block.substring(i + 2)), (block.substring(i, i + 2)));
                     if (formattingSize == -1) {
                         i++;
                     } else {
-                        sb.append(block.substring(0, i)).append("<").append(tags.get("" + block.charAt(i) + block.charAt(i + 1)));
-                        sb.append(replaceFormatting(new StringBuilder(block.substring(i + 2, i + formattingSize))));
-                        sb.append("</").append(tags.get("" + block.charAt(i) + block.charAt(i + 1)));
-                        sb.append(replaceFormatting(new StringBuilder(block.substring(i + 2 + formattingSize, block.length()))));
-                        return sb;
+                        return recursiveConvert(block, i, 2, formattingSize);
                     }
                 } else {
-                    int formattingSize = closeFormatting(new StringBuilder(block.substring(i + 1)), ("" + block.charAt(i)));
+                    int formattingSize = closeFormatting(new StringBuilder(block.substring(i + 1)), (block.substring(i, i + 1)));
                     if (formattingSize == -1) {
                         i++;
                     } else {
-                        sb.append(block.substring(0, i)).append("<").append(tags.get("" + block.charAt(i)));
-                        sb.append(replaceFormatting(new StringBuilder(block.substring(i + 1, i + formattingSize))));
-                        sb.append("</").append(tags.get("" + block.charAt(i)));
-                        sb.append(replaceFormatting(new StringBuilder(block.substring(i + 1 + formattingSize, block.length()))));
-                        return sb;
+                        return recursiveConvert(block, i, 1, formattingSize);
                     }
                 }
             }
@@ -128,11 +115,20 @@ public class Md2Html {
         return block;
     }
 
+    private static StringBuilder recursiveConvert(StringBuilder block, int charPos, int tagSize, int formattingSize) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(block.substring(0, charPos)).append("<").append(tags.get(block.substring(charPos, charPos + tagSize))).append(">");
+        sb.append(replaceFormatting(new StringBuilder(block.substring(charPos + tagSize, charPos + formattingSize))));
+        sb.append("</").append(tags.get(block.substring(charPos, charPos + tagSize))).append(">");
+        sb.append(replaceFormatting(new StringBuilder(block.substring(charPos + tagSize + formattingSize, block.length()))));
+        return sb;
+    }
+
     private static int closeFormatting(StringBuilder block, String tag) {
         int i = 0;
         if (tag.length() != 1) {
             while (i + 1 < block.length()) {
-                if (("" + block.charAt(i) + block.charAt(i + 1)).equals(tag)) {
+                if (block.substring(i, i + 2).equals(tag)) {
                     return i + 2;
                 } else {
                     i++;
@@ -140,11 +136,7 @@ public class Md2Html {
             }
         } else {
             while (i < block.length()) {
-                if (block.charAt(i) == '\\') {
-                    i += 2;
-                    continue;
-                }
-                if (("" + block.charAt(i)).equals(tag) && ("" + block.charAt(i + 1)).equals(tag)) {
+                if (block.charAt(i) == '\\' || (("" + block.charAt(i)).equals(tag) && ("" + block.charAt(i + 1)).equals(tag))) {
                     i += 2;
                     continue;
                 }
