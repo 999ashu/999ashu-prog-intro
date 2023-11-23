@@ -67,17 +67,9 @@ public class Md2Html {
         int h = getHeaderLevel(block);
         StringBuilder sb = new StringBuilder();
         if (h > 0) {
-            sb.append("<h");
-            sb.append(h);
-            sb.append(">");
-            sb.append(block.substring(h + 1));
-            sb.append("</h");
-            sb.append(h);
-            sb.append(">");
+            sb.append("<h").append(h).append(">").append(block.substring(h + 1)).append("</h").append(h).append(">");
         } else {
-            sb.append("<p>");
-            sb.append(block);
-            sb.append("</p>");
+            sb.append("<p>").append(block).append("</p>");
         }
         return sb;
     }
