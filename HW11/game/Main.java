@@ -1,10 +1,24 @@
 package game;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner gameMode = new Scanner(System.in);
+        System.out.println("Do you want to start tournament? (y/n)");
+        String answer = gameMode.nextLine();
+        /*if (answer.equalsIgnoreCase("n")) {
+            
+        }*/
+    }
+
+    private static void tournamentGame() {
+
+    }
+
+    private static void baseGame() {
         final Game game = new Game(false, new HumanPlayer(), new HumanPlayer());
         int result;
         do {
