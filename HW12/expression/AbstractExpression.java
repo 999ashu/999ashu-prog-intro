@@ -2,23 +2,35 @@ package expression;
 
 import java.util.Objects;
 
-public abstract class AbstractExpression implements Expression {
-    protected final Expression v1;
-    protected final Expression v2;
+public abstract class AbstractExpression implements AnyExpression {
+    protected final AnyExpression v1;
+    protected final AnyExpression v2;
     protected final String operation;
 
-    public AbstractExpression(Expression v1, Expression v2, String operation) {
+    public AbstractExpression(AnyExpression v1, AnyExpression v2, String operation) {
         this.v1 = v1;
         this.v2 = v2;
         this.operation = operation;
     }
 
+    @Override
     public int evaluate(int x) {
         return switch (operation) {
             case "+" -> (v1.evaluate(x) + v2.evaluate(x));
             case "-" -> (v1.evaluate(x) - v2.evaluate(x));
             case "*" -> (v1.evaluate(x) * v2.evaluate(x));
             case "/" -> (v1.evaluate(x) / v2.evaluate(x));
+            default -> 0;
+        };
+    }
+
+    @Override
+    public int evaluate(int x, int y, int z) {
+        return switch (operation) {
+            case "+" -> (v1.evaluate(x, y, z) + v2.evaluate(x, y, z));
+            case "-" -> (v1.evaluate(x, y, z) - v2.evaluate(x, y, z));
+            case "*" -> (v1.evaluate(x, y, z) * v2.evaluate(x, y, z));
+            case "/" -> (v1.evaluate(x, y, z) / v2.evaluate(x, y, z));
             default -> 0;
         };
     }

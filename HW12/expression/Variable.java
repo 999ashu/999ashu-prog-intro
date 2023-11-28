@@ -2,7 +2,7 @@ package expression;
 
 import java.util.Objects;
 
-public class Variable implements Expression {
+public class Variable implements AnyExpression {
     private final String name;
 
     public Variable(String name) {
@@ -11,6 +11,15 @@ public class Variable implements Expression {
 
     public int evaluate(int x) {
         return x;
+    }
+
+    public int evaluate(int x, int y, int z) {
+        return switch (name) {
+            case "x" -> x;
+            case "y" -> y;
+            case "z" -> z;
+            default -> 0;
+        };
     }
 
     public String toString() {

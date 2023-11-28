@@ -2,7 +2,7 @@ package expression;
 
 import java.util.Objects;
 
-public class Const implements Expression {
+public class Const implements AnyExpression {
     private final int constant;
 
     public Const(int constant) {
@@ -10,6 +10,10 @@ public class Const implements Expression {
     }
 
     public int evaluate(int x) {
+        return constant;
+    }
+
+    public int evaluate(int x, int y, int z) {
         return constant;
     }
 
