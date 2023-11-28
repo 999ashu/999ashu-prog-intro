@@ -21,7 +21,7 @@ public class ReverseMinRAbc {
                 }
                 matrix.add(line);
             }
-            for (ArrayList<Integer> line: matrix) {
+            for (ArrayList<Integer> line : matrix) {
                 for (int i = 0; i < line.size(); i++) {
                     if (i == 0) {
                         System.out.print(toAbc(line.get(i)) + " ");
@@ -32,12 +32,20 @@ public class ReverseMinRAbc {
                     }
                     System.out.print(toAbc(line.get(i)) + " ");
                 }
-                if (line != matrix.get(matrix.size() - 1)) {
-                    System.out.println();
-                }
+                newLine(line, matrix);
             }
         } catch (IOException e) {
             System.out.println("Input problem: " + e);
+        }
+    }
+
+    public static void newLine(List<Integer> line, ArrayList<ArrayList<Integer>> matrix) {
+        if (System.lineSeparator().length() == 2) {
+            if (line != matrix.get(matrix.size() - 1)) {
+                System.out.println();
+            }
+        } else {
+            System.out.println();
         }
     }
 
@@ -54,6 +62,7 @@ public class ReverseMinRAbc {
         }
         return Integer.parseInt(dec.toString());
     }
+
     private static String toAbc(Integer num) {
         StringBuilder dec = new StringBuilder();
         String abc = num.toString();
