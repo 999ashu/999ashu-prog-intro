@@ -1,5 +1,7 @@
 package expression;
 
+import java.util.Objects;
+
 public abstract class AbstractExpression implements Expression {
     protected final Expression v1;
     protected final Expression v2;
@@ -11,11 +13,30 @@ public abstract class AbstractExpression implements Expression {
         this.operation = operation;
     }
 
-    public String toString() {
-        return ("(" + v1.toString() + operation + v2.toString() + ")");
+    public int evaluate(int x) {
+        return switch (operation) {
+            case "+" -> (v1.evaluate(x) + v2.evaluate(x));
+            case "-" -> (v1.evaluate(x) - v2.evaluate(x));
+            case "*" -> (v1.evaluate(x) * v2.evaluate(x));
+            case "/" -> (v1.evaluate(x) / v2.evaluate(x));
+            default -> 0;
+        };
     }
 
-    public boolean equals(AbstractExpression expression) {
-        return toString().equals(expression.toString());
+    public String toString() {
+        return ("(" + v1.toString() + " " + operation + " " + v2.toString() + ")");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractExpression that = (AbstractExpression) o;
+        return Objects.equals(operation, that.operation) && Objects.equals(v1, that.v1) && Objects.equals(v2, that.v2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(v1, v2, operation);
     }
 }

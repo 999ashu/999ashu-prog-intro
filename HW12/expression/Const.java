@@ -1,23 +1,32 @@
 package expression;
 
-public class Const extends AbstractOperand {
+import java.util.Objects;
+
+public class Const implements Expression {
     private final int constant;
 
     public Const(int constant) {
         this.constant = constant;
     }
 
-    @Override
     public int evaluate(int x) {
         return constant;
     }
 
-    @Override
     public String toString() {
         return ("" + constant);
     }
 
-    public boolean equals(Expression expression) {
-        return ("" + constant).equals(expression.toString());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Const aConst = (Const) o;
+        return constant == aConst.constant;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(constant);
     }
 }

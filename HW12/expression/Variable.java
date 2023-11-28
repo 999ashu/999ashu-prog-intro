@@ -1,23 +1,32 @@
 package expression;
 
-public class Variable extends AbstractOperand {
+import java.util.Objects;
+
+public class Variable implements Expression {
     private final String name;
 
     public Variable(String name) {
         this.name = name;
     }
 
-    @Override
     public int evaluate(int x) {
         return x;
     }
 
-    @Override
     public String toString() {
         return name;
     }
 
-    public boolean equals(Expression expression) {
-        return name.equals(expression.toString());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Variable variable = (Variable) o;
+        return Objects.equals(name, variable.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
