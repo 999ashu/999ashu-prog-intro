@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ReverseMinRAbc {
     static final HashMap<Character, Integer> charMap = new HashMap<>();
@@ -10,10 +11,6 @@ public class ReverseMinRAbc {
         for (char ch = 'a'; ch <= 'j'; ch++) {
             charMap.put(ch, ch - 'a');
         }
-        FScanner textIn;
-        boolean isFirst = true;
-        String curr;
-        String prev = "";
         try {
             ArrayList<ArrayList<Integer>> matrix = new ArrayList<>();
             FScanner sc = new FScanner(System.in);
@@ -35,7 +32,9 @@ public class ReverseMinRAbc {
                     }
                     System.out.print(toAbc(line.get(i)) + " ");
                 }
-                System.out.println();
+                if (line != matrix.get(matrix.size() - 1)) {
+                    System.out.println();
+                }
             }
         } catch (IOException e) {
             System.out.println("Input problem: " + e);
