@@ -17,6 +17,11 @@ public class Const implements AnyExpression {
         return constant;
     }
 
+    @Override
+    public int compute(int v1, int v2) {
+        return 0;
+    }
+
     public String toString() {
         return ("" + constant);
     }

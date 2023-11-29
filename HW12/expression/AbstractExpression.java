@@ -15,24 +15,12 @@ public abstract class AbstractExpression implements AnyExpression {
 
     @Override
     public int evaluate(int x) {
-        return switch (operation) {
-            case "+" -> (v1.evaluate(x) + v2.evaluate(x));
-            case "-" -> (v1.evaluate(x) - v2.evaluate(x));
-            case "*" -> (v1.evaluate(x) * v2.evaluate(x));
-            case "/" -> (v1.evaluate(x) / v2.evaluate(x));
-            default -> 0;
-        };
+        return compute(v1.evaluate(x), v2.evaluate(x));
     }
 
     @Override
     public int evaluate(int x, int y, int z) {
-        return switch (operation) {
-            case "+" -> (v1.evaluate(x, y, z) + v2.evaluate(x, y, z));
-            case "-" -> (v1.evaluate(x, y, z) - v2.evaluate(x, y, z));
-            case "*" -> (v1.evaluate(x, y, z) * v2.evaluate(x, y, z));
-            case "/" -> (v1.evaluate(x, y, z) / v2.evaluate(x, y, z));
-            default -> 0;
-        };
+        return compute(v1.evaluate(x, y, z), v2.evaluate(x, y, z));
     }
 
     public String toString() {
