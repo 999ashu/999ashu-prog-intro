@@ -27,7 +27,7 @@ public class Game {
         final Move move = player.move(board.getPosition(), board.getCell());
         final Result result = board.makeMove(move);
         log("Player " + no + " move: " + move);
-        log("Position:\n" + board);
+        log("Position:" + System.lineSeparator() + board);
         if (result == Result.WIN) {
             log("Player " + no + " won");
             return no;

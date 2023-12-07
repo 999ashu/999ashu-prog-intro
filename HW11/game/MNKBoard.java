@@ -41,7 +41,7 @@ public class MNKBoard implements Board, Position {
             return Result.LOSE;
         }
 
-        cells[move.getRow()][move.getColumn()] = move.getValue();
+        cells[move.row()][move.column()] = move.value();
 
         int empty = 0;
         for (int u = 0; u < m; u++) {
@@ -85,9 +85,9 @@ public class MNKBoard implements Board, Position {
 
     @Override
     public boolean isValid(final Move move) {
-        return 0 <= move.getRow() && move.getRow() < m
-                && 0 <= move.getColumn() && move.getColumn() < n
-                && cells[move.getRow()][move.getColumn()] == Cell.E
+        return 0 <= move.row() && move.row() < m
+                && 0 <= move.column() && move.column() < n
+                && cells[move.row()][move.column()] == Cell.E
                 && turn == getCell();
     }
 
@@ -103,7 +103,7 @@ public class MNKBoard implements Board, Position {
             sb.append(c);
         }
         for (int r = 0; r < m; r++) {
-            sb.append("\n");
+            sb.append(System.lineSeparator());
             sb.append(r);
             for (int c = 0; c < n; c++) {
                 sb.append(SYMBOLS.get(cells[r][c]));
