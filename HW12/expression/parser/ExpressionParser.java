@@ -16,77 +16,55 @@ public class ExpressionParser implements TripleParser {
 
     @Override
     public AnyExpression parse(String expression) {
-        Stack<String> rpn = getRPN(expression);
-        System.err.println(expression + " " + rpn);
-        AnyExpression ans = toExpression(rpn);
-        System.err.println(ans);
-        return ans;
-    }
-
-    public Stack<String> getRPN(String expression) {
         Stack<Character> operators = new Stack<>();
-        Stack<String> rpn = new Stack<>();
+        LinkedList<AnyExpression> exp = new LinkedList<>();
         for (int i = 0; i < expression.length(); i++) {
             char ch = expression.charAt(i);
             while (i < expression.length() - 1 && Character.isWhitespace(ch)) {
                 ch = expression.charAt(++i);
             }
             if (ch == '-' && Character.isDigit(expression.charAt(i + 1))) {
-                rpn.push(getInt(expression, i, 1));
-                i += rpn.peek().length() - 1;
+                String num = getInt(expression, i, 1);
+                exp.push(new Const((Integer.parseInt(num))));
+                i += num.length() - 1;
             } else if (Character.isDigit(ch)) {
-                rpn.push(getInt(expression, i, 0));
-                i += rpn.peek().length() - 1;
+                String num = getInt(expression, i, 0);
+                exp.push(new Const(Integer.parseInt(num)));
+                i += num.length() - 1;
             } else if (ch == 'x' || ch == 'y' || ch == 'z') {
-                rpn.push("" + ch);
+                exp.push(new Variable("" + ch));
             } else if (ch == '(') {
                 operators.push(ch);
             } else if (ch == ')') {
                 while (operators.peek() != '(') {
-                    rpn.push("" + operators.pop());
+                    exp.push(getOperation(operators.pop(), exp));
                 }
                 operators.pop();
             } else if (priority.containsKey(ch)) {
-                if (ch == '-' && (rpn.isEmpty() || i > 1 && !operators.isEmpty() && operators.peek() == '-')) {
+                if (ch == '-' && (exp.isEmpty() || i > 1 && !operators.isEmpty() && operators.peek() == '-')) {
                     ch = '~';
                 }
                 while (!operators.isEmpty() && priority.get(ch) > priority.get(operators.peek())) {
-                    rpn.push("" + operators.pop());
+                    exp.push(getOperation(operators.pop(), exp));
                 }
                 operators.push(ch);
             }
         }
         while (!operators.isEmpty()) {
-            rpn.push("" + operators.pop());
+            exp.push(getOperation(operators.pop(), exp));
         }
-        return rpn;
+        return exp.pop();
     }
 
-    private AnyExpression toExpression(Stack<String> rpn) {
-        while (!rpn.isEmpty()) {
-            String element = rpn.pop();
-            char ch = element.charAt(0);
-            if (Character.isDigit(ch) || (element.length() > 1 && ch == '-' && Character.isDigit(element.charAt(1)))) {
-                return new Const(Integer.parseInt(element));
-            } else if (ch == 'x' || ch == 'y' || ch == 'z') {
-                return new Variable(element);
-            } else if (ch == '~') {
-                return new Inversion(toExpression(rpn));
-            } else if (ch == '*') {
-                AnyExpression arg2 = toExpression(rpn);
-                return new Multiply(toExpression(rpn), arg2);
-            } else if (ch == '/') {
-                AnyExpression arg2 = toExpression(rpn);
-                return new Divide(toExpression(rpn), arg2);
-            } else if (ch == '+') {
-                AnyExpression arg2 = toExpression(rpn);
-                return new Add(toExpression(rpn), arg2);
-            } else if (ch == '-') {
-                AnyExpression arg2 = toExpression(rpn);
-                return new Subtract(toExpression(rpn), arg2);
-            }
-        }
-        return new Variable("");
+    private AnyExpression getOperation(char op, Stack<AnyExpression> exp) {
+        AnyExpression arg = exp.pop();
+        return switch (op) {
+            case '*' -> new Multiply(exp.pop(), arg);
+            case '/' -> new Divide(exp.pop(), arg);
+            case '+' -> new Add(exp.pop(), arg);
+            case '-' -> new Subtract(exp.pop(), arg);
+            default -> new Inversion(arg);
+        };
     }
 
     private String getInt(String str, int start, int negative) {
