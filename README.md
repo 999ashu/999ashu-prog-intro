@@ -15,4 +15,4 @@
  1. [MNK + OlimpicSystem](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW11-mnk/)
  1. [Expression + Triple](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW12-14-exceptions/expression/)
  1. [ExpressionParser + Bitwise](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW12-14-exceptions/expression/parser/)
- 1. [Exceptions + Zeroes](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW12-14-exceptions/expression/exceptions)**
+ 1. [Exceptions + Zeroes](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW12-14-exceptions/expression/exceptions)
