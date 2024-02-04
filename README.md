@@ -2,7 +2,7 @@
 ## My homework solutions of introduction to programming course of 1st semeseter.
 ### Conditions for [tasks](https://github.com/999ashu/999ashu-prog-intro/blob/master/conditions/prog-intro-2023-conditions.pdf/) and [modifications](https://github.com/999ashu/999ashu-prog-intro/blob/master/conditions/prog-intro-2023-tests/README.md/)
 ### Solutions:
-** 1. [Runme](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW1-runme/)**
+ 1. [Runme](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW1-runme/)
  1. [Sum + Double](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW2-sum/)
  1. [Reverse + MinR](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW3-reverse/)
  1. [WordStat + CountPrefixL](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW4-wordstat/)
