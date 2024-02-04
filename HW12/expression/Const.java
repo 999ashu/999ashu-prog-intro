@@ -2,28 +2,26 @@ package expression;
 
 import java.util.Objects;
 
-public class Const implements AnyExpression {
-    private final int constant;
+public class Const implements CustomExpression {
+    private final int value;
 
-    public Const(int constant) {
-        this.constant = constant;
-    }
-
-    public int evaluate(int x) {
-        return constant;
-    }
-
-    public int evaluate(int x, int y, int z) {
-        return constant;
+    public Const(int value) {
+        this.value = value;
     }
 
     @Override
-    public int compute(int v1, int v2) {
-        return 0;
+    public int evaluate(int x) {
+        return this.value;
     }
 
+    @Override
+    public int evaluate(int x, int y, int z) {
+        return this.value;
+    }
+
+    @Override
     public String toString() {
-        return ("" + constant);
+        return String.valueOf(this.value);
     }
 
     @Override
@@ -31,11 +29,11 @@ public class Const implements AnyExpression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Const aConst = (Const) o;
-        return constant == aConst.constant;
+        return value == aConst.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(constant);
+        return Objects.hash(value);
     }
 }

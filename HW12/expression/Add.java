@@ -1,12 +1,13 @@
 package expression;
 
-public class Add extends AbstractExpression {
-    public Add(AnyExpression v1, AnyExpression v2) {
-        super(v1, v2);
+public class Add extends AbstractBinaryOperation {
+    public Add(CustomExpression value1, CustomExpression value2) {
+        super(value1, value2);
     }
 
-    public int compute(int v1, int v2) {
-        return v1 + v2;
+    @Override
+    protected int compute(int value1, int value2) {
+        return value1 + value2;
     }
 
     @Override

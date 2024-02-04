@@ -1,16 +1,17 @@
 package expression;
 
-public class Multiply extends AbstractExpression {
-    public Multiply(AnyExpression v1, AnyExpression v2) {
-        super(v1, v2);
+public class Multiply extends AbstractBinaryOperation {
+    public Multiply(CustomExpression value1, CustomExpression value2) {
+        super(value1, value2);
+    }
+
+    @Override
+    protected int compute(int value1, int value2) {
+        return value1 * value2;
     }
 
     @Override
     protected String getOperation() {
-        return "*";
-    }
-
-    public int compute(int v1, int v2) {
-        return v1 * v2;
+        return "*" ;
     }
 }

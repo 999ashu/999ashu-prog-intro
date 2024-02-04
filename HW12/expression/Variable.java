@@ -2,19 +2,21 @@ package expression;
 
 import java.util.Objects;
 
-public class Variable implements AnyExpression {
-    private final String name;
+public class Variable implements CustomExpression {
+    private final String value;
 
-    public Variable(String name) {
-        this.name = name;
+    public Variable(String value) {
+        this.value = value;
     }
 
+    @Override
     public int evaluate(int x) {
         return x;
     }
 
+    @Override
     public int evaluate(int x, int y, int z) {
-        return switch (name) {
+        return switch (value) {
             case "x" -> x;
             case "y" -> y;
             case "z" -> z;
@@ -23,12 +25,8 @@ public class Variable implements AnyExpression {
     }
 
     @Override
-    public int compute(int v1, int v2) {
-        return 0;
-    }
-
     public String toString() {
-        return name;
+        return this.value;
     }
 
     @Override
@@ -36,11 +34,11 @@ public class Variable implements AnyExpression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Variable variable = (Variable) o;
-        return Objects.equals(name, variable.name);
+        return Objects.equals(value, variable.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(value);
     }
 }
