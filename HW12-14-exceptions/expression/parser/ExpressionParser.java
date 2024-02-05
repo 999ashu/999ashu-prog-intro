@@ -4,7 +4,6 @@ import expression.*;
 
 public class ExpressionParser implements TripleParser {
     public TripleExpression parse(String expression) {
-        System.err.println(expression);
         return new Parser(new StringSource(expression)).parseExpression();
     }
 
@@ -14,42 +13,42 @@ public class ExpressionParser implements TripleParser {
         }
 
         private CustomExpression parseExpression() {
-            return parseE();
-        }
-
-        private CustomExpression parseE() {
-            skipWhitespace();
-            CustomExpression argument = parseT();
-            skipWhitespace();
-            if (test('+') || test('-')) {
-                return makeExpression(String.valueOf(take()), argument, parseE());
+            CustomExpression argument = parseTerm();
+            while (true) {
+                if (test('+') || test('-')) {
+                    argument = makeExpression(String.valueOf(take()), argument, parseTerm());
+                } else {
+                    return argument;
+                }
             }
-            return argument;
         }
 
-        private CustomExpression parseT() {
-            skipWhitespace();
-            CustomExpression argument = parseF();
-            skipWhitespace();
-            if (test('*') || test('/')) {
-                return makeExpression(String.valueOf(take()), argument, parseT());
+        private CustomExpression parseTerm() {
+            CustomExpression argument = parseAtom();
+            while (true) {
+                if (test('*') || test('/')) {
+                    argument = makeExpression(String.valueOf(take()), argument, parseAtom());
+                } else {
+                    return argument;
+                }
             }
-            return argument;
         }
 
-        private CustomExpression parseF() {
+        private CustomExpression parseAtom() {
             if (take('(')) {
-                CustomExpression argument = parseE();
+                CustomExpression argument = parseExpression();
                 expect(')');
                 return argument;
             } else if (between('x', 'z')) {
                 return new Variable(String.valueOf(take()));
-            } else if (between('0', '9')) {
-                return new Const(getNumber(false));
             } else if (take('-')) {
-                return new Const(getNumber(true));
+                if (between('0', '9')) {
+                    return new Const(getNumber(true));
+                } else {
+                    return new Negate(parseAtom());
+                }
             } else {
-                return new Negate(parseF());
+                return new Const(getNumber(false));
             }
         }
 

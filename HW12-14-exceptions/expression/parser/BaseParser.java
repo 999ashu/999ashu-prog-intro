@@ -11,16 +11,19 @@ public class BaseParser {
     }
 
     protected char take() {
+        skipWhitespace();
         final char result = ch;
         ch = source.hasNext() ? source.next() : END;
         return result;
     }
 
     protected boolean test(final char expected) {
+        skipWhitespace();
         return ch == expected;
     }
 
     protected boolean take(final char expected) {
+        skipWhitespace();
         if (test(expected)) {
             take();
             return true;
@@ -29,18 +32,21 @@ public class BaseParser {
     }
 
     protected void expect(final char expected) {
+        skipWhitespace();
         if (!take(expected)) {
             throw error("Expected '" + expected + "', found '" + ch + "'");
         }
     }
 
     protected void expect(final String value) {
+        skipWhitespace();
         for (final char c : value.toCharArray()) {
             expect(c);
         }
     }
 
     protected boolean between(final char from, final char to) {
+        skipWhitespace();
         return from <= ch && ch <= to;
     }
 

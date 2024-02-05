@@ -31,6 +31,6 @@ public class Main {
             }
         }*/
         ExpressionParser parser = new ExpressionParser();
-        System.out.println(parser.parse("z + y - -30 + (z + x)"));
+        System.out.println(parser.parse("- 0"));
     }
 }
