@@ -1,10 +1,10 @@
 package expression;
 
-import expression.parser.ExpressionParser;
+import expression.exceptions.ExpressionParser;
 
 public class Main {
     public static void main(String[] args) {
-        /*TripleExpression exp = new Divide(
+        TripleExpression exp = new Divide(
                 new Multiply(
                         new Multiply(
                                 new Multiply(
@@ -16,8 +16,7 @@ public class Main {
                                         new Variable("x")),
                                 new Variable("x")),
                         new Variable("x")),
-                new Subtract(new Variable("x"), new Const(1))
-        );
+                new Subtract(new Variable("x"), new Const(1)));
         System.out.println("Before parse: " + exp);
         ExpressionParser parser = new ExpressionParser();
         System.out.println(parser.parse("x + 1"));
@@ -29,8 +28,6 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }*/
-        ExpressionParser parser = new ExpressionParser();
-        System.out.println(parser.parse("- 0"));
+        }
     }
 }
