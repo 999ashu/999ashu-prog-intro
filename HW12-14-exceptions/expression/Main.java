@@ -22,9 +22,10 @@ public class Main {
         System.out.println(parser.parse("x + 1"));
         exp = parser.parse(exp.toString());
         System.out.println("After parse: " + exp);
+        System.out.println("===========================================================");
         for (int x = 0; x <= 10; x++) {
             try {
-                exp.evaluate(x, 0, 0);
+                System.out.println(exp.evaluate(x, 0, 0));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

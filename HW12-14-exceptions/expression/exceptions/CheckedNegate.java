@@ -1,6 +1,7 @@
 package expression.exceptions;
 
 import expression.CustomExpression;
+import expression.exceptions.parsingExceptions.OverflowException;
 
 public class CheckedNegate extends AbstractUnaryOperation {
     public CheckedNegate(CustomExpression value) {
@@ -9,6 +10,9 @@ public class CheckedNegate extends AbstractUnaryOperation {
 
     @Override
     protected int compute(int value) {
+        if (value == Integer.MIN_VALUE) {
+            throw new OverflowException(getOperation(), value);
+        }
         return -value;
     }
 
