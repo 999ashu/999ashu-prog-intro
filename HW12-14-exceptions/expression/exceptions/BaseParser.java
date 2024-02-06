@@ -1,5 +1,7 @@
 package expression.exceptions;
 
+import expression.exceptions.parsingExceptions.UnexpectedSymbolException;
+
 public class BaseParser {
     private static final char END = '\0';
     private final CharSource source;
@@ -33,8 +35,10 @@ public class BaseParser {
 
     protected void expect(final char expected) {
         skipWhitespace();
-        if (!take(expected)) {
-            throw error("Expected '" + expected + "', found '" + ch + "'");
+        if (test(expected)) {
+            take();
+        } else {
+            throw new UnexpectedSymbolException(String.valueOf(take()));
         }
     }
 
@@ -46,7 +50,6 @@ public class BaseParser {
     }
 
     protected boolean between(final char from, final char to) {
-        skipWhitespace();
         return from <= ch && ch <= to;
     }
 
@@ -57,10 +60,7 @@ public class BaseParser {
     }
 
     protected boolean eof() {
-        return take(END);
-    }
-
-    protected IllegalArgumentException error(final String message) {
-        return source.error(message);
+        skipWhitespace();
+        return ch == END;
     }
 }
