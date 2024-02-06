@@ -57,6 +57,7 @@ public class BaseParser {
     }
 
     protected boolean eof() {
+        skipWhitespace();
         return take(END);
     }
 
