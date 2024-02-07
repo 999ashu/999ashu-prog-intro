@@ -1,5 +1,6 @@
 package expression.exceptions;
 
+import expression.AbstractUnaryOperation;
 import expression.CustomExpression;
 import expression.exceptions.parsingExceptions.OverflowException;
 

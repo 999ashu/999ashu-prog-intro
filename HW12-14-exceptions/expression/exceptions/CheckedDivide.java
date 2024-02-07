@@ -1,5 +1,6 @@
 package expression.exceptions;
 
+import expression.AbstractBinaryOperation;
 import expression.CustomExpression;
 import expression.exceptions.parsingExceptions.DivisionByZeroException;
 import expression.exceptions.parsingExceptions.OverflowException;
