@@ -1,5 +1,7 @@
 package expression.parser;
 
+import expression.exceptions.parsingExceptions.UnexpectedSymbolException;
+
 public class BaseParser {
     private static final char END = '\0';
     private final CharSource source;
@@ -11,19 +13,16 @@ public class BaseParser {
     }
 
     protected char take() {
-        skipWhitespace();
         final char result = ch;
         ch = source.hasNext() ? source.next() : END;
         return result;
     }
 
     protected boolean test(final char expected) {
-        skipWhitespace();
         return ch == expected;
     }
 
     protected boolean take(final char expected) {
-        skipWhitespace();
         if (test(expected)) {
             take();
             return true;
@@ -32,21 +31,20 @@ public class BaseParser {
     }
 
     protected void expect(final char expected) {
-        skipWhitespace();
-        if (!take(expected)) {
-            throw error("Expected '" + expected + "', found '" + ch + "'");
+        if (test(expected)) {
+            take();
+        } else {
+            throw new UnexpectedSymbolException(String.valueOf(take()));
         }
     }
 
     protected void expect(final String value) {
-        skipWhitespace();
         for (final char c : value.toCharArray()) {
             expect(c);
         }
     }
 
     protected boolean between(final char from, final char to) {
-        skipWhitespace();
         return from <= ch && ch <= to;
     }
 
@@ -57,11 +55,6 @@ public class BaseParser {
     }
 
     protected boolean eof() {
-        skipWhitespace();
-        return take(END);
-    }
-
-    protected IllegalArgumentException error(final String message) {
-        return source.error(message);
+        return ch == END;
     }
 }

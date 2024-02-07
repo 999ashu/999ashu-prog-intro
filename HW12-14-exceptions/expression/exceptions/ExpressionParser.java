@@ -1,34 +1,40 @@
 package expression.exceptions;
 
-import expression.CustomExpression;
+import expression.*;
+import expression.parser.*;
 import expression.exceptions.parsingExceptions.*;
 
 public class ExpressionParser implements TripleParser {
     public CustomExpression parse(String expression) {
-        return new Parser(new StringSource(expression)).checkParsing();
+        return new ExpParser(new StringSource(expression)).checkParsing();
     }
 
-    private static final class Parser extends BaseParser {
+    private static final class ExpParser extends BaseParser {
+        boolean closing = true;
         int arguments = 1;
 
-        private Parser(CharSource source) {
+        private ExpParser(CharSource source) {
             super(source);
         }
 
         private CustomExpression checkParsing() {
             CustomExpression result = parseExpression();
-            if (eof()) {
+            if (!closing) {
+                throw new IncorrectBracketSequenceException("closing");
+            } else if (eof()) {
                 return result;
-            }
-            if (take(')')) {
+            } else if (take(')')) {
                 throw new IncorrectBracketSequenceException("opening");
+            } else {
+                throw new InvalidExpStructureException();
             }
-            throw new InvalidExpStructureException();
         }
 
         private CustomExpression parseExpression() {
+            skipWhitespace();
             CustomExpression argument = parseTerm();
             while (true) {
+                skipWhitespace();
                 if (test('+') || test('-')) {
                     argument = makeExpression(String.valueOf(take()), argument, parseTerm());
                 } else {
@@ -38,8 +44,10 @@ public class ExpressionParser implements TripleParser {
         }
 
         private CustomExpression parseTerm() {
+            skipWhitespace();
             CustomExpression argument = parseAtom();
             while (true) {
+                skipWhitespace();
                 if (test('*') || test('/')) {
                     argument = makeExpression(String.valueOf(take()), argument, parseAtom());
                 } else {
@@ -49,11 +57,14 @@ public class ExpressionParser implements TripleParser {
         }
 
         private CustomExpression parseAtom() {
+            skipWhitespace();
             if (take('(')) {
+                closing = false;
+                skipWhitespace();
                 CustomExpression argument = parseExpression();
-                if (!test(')')) {
-                    throw new IncorrectBracketSequenceException("closing");
-                } else {
+                skipWhitespace();
+                if (test(')')) {
+                    closing = true;
                     take();
                 }
                 arguments++;

@@ -1,6 +1,7 @@
 package expression.parser;
 
 import expression.*;
+import expression.exceptions.parsingExceptions.InvalidExpStructureException;
 
 public class ExpressionParser implements TripleParser {
     public TripleExpression parse(String expression) {
@@ -13,8 +14,10 @@ public class ExpressionParser implements TripleParser {
         }
 
         private CustomExpression parseExpression() {
+            skipWhitespace();
             CustomExpression argument = parseTerm();
             while (true) {
+                skipWhitespace();
                 if (test('+') || test('-')) {
                     argument = makeExpression(String.valueOf(take()), argument, parseTerm());
                 } else {
@@ -24,8 +27,10 @@ public class ExpressionParser implements TripleParser {
         }
 
         private CustomExpression parseTerm() {
+            skipWhitespace();
             CustomExpression argument = parseAtom();
             while (true) {
+                skipWhitespace();
                 if (test('*') || test('/')) {
                     argument = makeExpression(String.valueOf(take()), argument, parseAtom());
                 } else {
@@ -35,8 +40,11 @@ public class ExpressionParser implements TripleParser {
         }
 
         private CustomExpression parseAtom() {
+            skipWhitespace();
             if (take('(')) {
+                skipWhitespace();
                 CustomExpression argument = parseExpression();
+                skipWhitespace();
                 expect(')');
                 return argument;
             } else if (between('x', 'z')) {
@@ -66,7 +74,7 @@ public class ExpressionParser implements TripleParser {
                 case "-" -> new Subtract(argument1, argument2);
                 case "*" -> new Multiply(argument1, argument2);
                 case "/" -> new Divide(argument1, argument2);
-                default -> throw error("Unknown operator: " + operator);
+                default -> throw new InvalidExpStructureException();
             };
         }
     }
