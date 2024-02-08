@@ -1,5 +1,6 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractUnaryOperation implements CustomExpression {
@@ -25,7 +26,15 @@ public abstract class AbstractUnaryOperation implements CustomExpression {
 
     @Override
     public String toString() {
-        return getOperation() + "(" + value + ")";
+        StringBuilder sb = new StringBuilder();
+        toStringBuilder(sb);
+        return sb.toString();
+    }
+
+    public void toStringBuilder(StringBuilder sb) {
+        sb.append(getOperation()).append("(");
+        value.toStringBuilder(sb);
+        sb.append(")");
     }
 
     @Override

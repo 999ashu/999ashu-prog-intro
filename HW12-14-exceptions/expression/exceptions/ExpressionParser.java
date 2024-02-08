@@ -5,13 +5,14 @@ import expression.parser.*;
 import expression.exceptions.parsingExceptions.*;
 
 public class ExpressionParser implements TripleParser {
+
+    @Override
     public CustomExpression parse(String expression) {
         return new ExpParser(new StringSource(expression)).checkParsing();
     }
 
     private static final class ExpParser extends BaseParser {
-        boolean closing = true;
-        int arguments = 1;
+        int tokens = 1;
 
         private ExpParser(CharSource source) {
             super(source);
@@ -19,9 +20,7 @@ public class ExpressionParser implements TripleParser {
 
         private CustomExpression checkParsing() {
             CustomExpression result = parseExpression();
-            if (!closing) {
-                throw new IncorrectBracketSequenceException("closing");
-            } else if (eof()) {
+            if (eof()) {
                 return result;
             } else if (take(')')) {
                 throw new IncorrectBracketSequenceException("opening");
@@ -59,35 +58,45 @@ public class ExpressionParser implements TripleParser {
         private CustomExpression parseAtom() {
             skipWhitespace();
             if (take('(')) {
-                closing = false;
                 skipWhitespace();
                 CustomExpression argument = parseExpression();
                 skipWhitespace();
-                if (test(')')) {
-                    closing = true;
+                if (lookup() == ')') {
                     take();
+                } else if (eof()) {
+                    throw new IncorrectBracketSequenceException("closing");
+                } else {
+                    throw new UnexpectedSymbolException(String.valueOf(take()));
                 }
-                arguments++;
+                tokens++;
                 return argument;
             } else if (between('x', 'z')) {
-                arguments++;
+                tokens++;
                 return new Variable(String.valueOf(take()));
+            } else if (between('0', '9')) {
+                tokens++;
+                return new Const(getNumber(false));
             } else if (take('-')) {
                 if (between('0', '9')) {
-                    arguments++;
+                    tokens++;
                     return new Const(getNumber(true));
                 } else {
                     return new CheckedNegate(parseAtom());
                 }
-            } else if (between('0', '9')) {
-                arguments++;
-                return new Const(getNumber(false));
+            } else if (lookup() == 't' || lookup() == 'l') {
+                if (take('t') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                    return new Tzero(parseAtom());
+                } else if (take('l') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                    return new Lzero(parseAtom());
+                } else {
+                    throw new UnexpectedSymbolException(String.valueOf(take()));
+                }
             } else if (eof() || take('*') || take('/') ||
                     take('+') || take('-')) {
-                if (arguments == 1 && eof()) {
-                    throw new InvalidArgumentException("any");
+                if (tokens == 1 && eof()) {
+                    throw new InvalidTokenException("any");
                 } else {
-                    throw new InvalidArgumentException(String.valueOf(arguments));
+                    throw new InvalidTokenException(String.valueOf(tokens));
                 }
             } else if (test(')')) {
                 throw new EmptyParenthesisException();

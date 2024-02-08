@@ -1,11 +1,10 @@
 package expression;
 
 import expression.exceptions.ExpressionParser;
-import expression.exceptions.parsingExceptions.UnexpectedSymbolException;
 
 public class Main {
     public static void main(String[] args) {
-        /*TripleExpression exp = new Divide(
+        TripleExpression exp = new Divide(
                 new Multiply(
                         new Multiply(
                                 new Multiply(
@@ -30,8 +29,6 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }*/
-        ExpressionParser parser = new ExpressionParser();
-        System.out.println(parser.parse("- (1, 2)"));
+        }
     }
 }

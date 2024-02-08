@@ -1,12 +1,19 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Variable implements CustomExpression {
     private final String value;
+    private int index;
 
     public Variable(String value) {
         this.value = value;
+    }
+
+    public Variable(int value) {
+        this.index = value;
+        this.value = "$" + value;
     }
 
     @Override
@@ -16,11 +23,11 @@ public class Variable implements CustomExpression {
 
     @Override
     public int evaluate(int x, int y, int z) {
-        return switch (value) {
+        return switch (this.value) {
             case "x" -> x;
             case "y" -> y;
             case "z" -> z;
-            default -> 0;
+            default -> index;
         };
     }
 
@@ -29,16 +36,20 @@ public class Variable implements CustomExpression {
         return this.value;
     }
 
+    public void toStringBuilder(StringBuilder sb) {
+        sb.append(this.value);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Variable variable = (Variable) o;
-        return Objects.equals(value, variable.value);
+        return index == variable.index && Objects.equals(value, variable.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(value, index);
     }
 }

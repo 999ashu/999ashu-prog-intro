@@ -1,5 +1,6 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Const implements CustomExpression {
@@ -22,6 +23,10 @@ public class Const implements CustomExpression {
     @Override
     public String toString() {
         return String.valueOf(this.value);
+    }
+
+    public void toStringBuilder(StringBuilder sb) {
+        sb.append(this.value);
     }
 
     @Override
