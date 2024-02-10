@@ -1,5 +1,5 @@
 # 999ashu-prog-intro **(NOT FOR CHEATING)**
-## My solutions for homework of "introduction to programming" course of CT ITMO y2023 1st semester.
+## My solutions for tasks of "introduction to programming" course of CT ITMO y2023 1st semester.
 ### Conditions for [tasks](https://github.com/999ashu/999ashu-prog-intro/blob/master/conditions/prog-intro-2023-conditions.pdf/) and [modifications](https://github.com/999ashu/999ashu-prog-intro/blob/master/conditions/prog-intro-2023-tests/README.md/)
 ### Solutions:
  1. [Runme](https://github.com/999ashu/999ashu-prog-intro/tree/master/HW1-runme/)
